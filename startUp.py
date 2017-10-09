@@ -1,19 +1,26 @@
-import re
 import boto3
 
 def lambda_handler(event, context):
-    # TODO implement
-    return hello()
+    return start()
     
 
 
 
-def hello():
-   client = boto3.client('ec2')
-   response = client.start_instances(
-    InstanceIds=[
-        'i-0b778eea36b4f77b1',
-    ]
+def start():
+    client = boto3.client('ec2')
+    response = client.describe_instances(
+    Filters=[{
+            'Name': 'tag:StartUp',
+            'Values': [
+                'True',
+            ]
+        },
+    ])
+    id= []
+    for r in response['Reservations']:
+        for i in r['Instances']:
+            id.append(i['InstanceId'])
+        
+    response = client.start_instances(
+    InstanceIds=id
     )
-
-   return response
