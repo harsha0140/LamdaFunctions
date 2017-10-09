@@ -6,7 +6,7 @@ def lambda_handler(event, context):
 
 
 
-def start():
+def stop():
     client = boto3.client('ec2')
     response = client.describe_instances(
     Filters=[{
@@ -21,6 +21,6 @@ def start():
         for i in r['Instances']:
             id.append(i['InstanceId'])
         
-    response = client.start_instances(
+    response = client.stop_instances(
     InstanceIds=id
     )
